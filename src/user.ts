@@ -1,4 +1,4 @@
-import { MysqlDatabase, joinKeys, formatValues, arrayTypes } from './database'
+import { joinKeys, formatValues, arrayTypes } from './database'
 import { observe, complement } from 'koishi-utils'
 import { injectMethods, userFields, UserData, createUser, User } from 'koishi-core'
 
@@ -29,7 +29,7 @@ injectMethods('mysql', {
     return this.query(`SELECT ${joinKeys(fields)} FROM users WHERE id IN (${ids.join(', ')})`)
   },
 
-  async getAllUsers (this: MysqlDatabase, fields = userFields) {
+  async getAllUsers (fields = userFields) {
     return this.query('SELECT ' + joinKeys(fields) + ' FROM `users`')
   },
 
