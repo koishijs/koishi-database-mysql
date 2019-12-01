@@ -4,14 +4,6 @@ import { injectMethods, userFields, UserData, createUser, User } from 'koishi-co
 
 arrayTypes.push('users.endings', 'users.achievement', 'users.inference')
 
-// TODO: remove after publishing the next core version
-// https://github.com/koishijs/koishi-core/pull/2
-declare module 'koishi-core/dist/database' {
-  interface Database {
-    getUserCount(): Promise<number>
-  }
-}
-
 injectMethods('mysql', {
   async getUser (userId, defaultAuthority = 0, fields = userFields) {
     const [data] = await this.query('SELECT ' + joinKeys(fields) + ' FROM `users` WHERE `id` = ?', [userId]) as UserData[]
