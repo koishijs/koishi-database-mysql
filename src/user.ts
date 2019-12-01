@@ -55,7 +55,6 @@ injectMethods('mysql', {
   },
 
   async getUserCount () {
-    const [{ 'COUNT(*)': userCount }] = await this.query('SELECT COUNT(*) FROM `users`')
-    return userCount
+    return this.count('users')
   },
 })

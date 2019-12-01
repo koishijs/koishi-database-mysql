@@ -49,4 +49,8 @@ injectMethods('mysql', {
     Object.assign(groupCache[groupId], data)
     return result
   },
+
+  async getGroupCount () {
+    return this.count('groups')
+  },
 })

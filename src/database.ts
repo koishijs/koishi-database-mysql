@@ -106,6 +106,11 @@ export class MysqlDatabase {
     )
     return header as OkPacket
   }
+
+  count = async (table: string) => {
+    const [{ 'COUNT(*)': count }] = await this.query('SELECT COUNT(*) FROM ??', [table])
+    return count as number
+  }
 }
 
 registerSubdatabase('mysql', MysqlDatabase)
