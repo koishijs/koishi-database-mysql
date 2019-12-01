@@ -1,3 +1,4 @@
+import './database'
 import './group'
 import './user'
 

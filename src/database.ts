@@ -53,10 +53,6 @@ export function includes (key: string, value: string) {
   return `${key} LIKE '${value}' OR ${key} LIKE '%,${value}' OR ${key} LIKE '${value},%' OR ${key} LIKE '%,${value},%'`
 }
 
-export interface Row {
-  id: number
-}
-
 export interface OkPacket {
   fieldCount: number
   affectedRows: number
@@ -91,7 +87,7 @@ export class MysqlDatabase {
     })
   }
 
-  create = async <T extends Row> (table: string, data: T) => {
+  create = async <T extends {}> (table: string, data: T) => {
     const keys = Object.keys(data)
     if (!keys.length) return
     const header = await this.query(

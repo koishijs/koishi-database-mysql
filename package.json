@@ -9,9 +9,17 @@
   "author": "Shigma <1700011071@pku.edu.cn>",
   "license": "MIT",
   "scripts": {
-    "jest": "jest tests/.*\\.spec\\.ts",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "prepack": "tsc -b"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koishijs/koishi-database-mysql.git"
+  },
+  "bugs": {
+    "url": "https://github.com/koishijs/koishi-database-mysql/issues"
+  },
+  "homepage": "https://github.com/koishijs/koishi-database-mysql#readme",
   "devDependencies": {
     "@types/mysql": "^2.15.8",
     "@types/node": "^12.12.14",
