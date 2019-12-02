@@ -87,14 +87,14 @@ export class MysqlDatabase {
     })
   }
 
-  create = async <T extends {}> (table: string, data: T) => {
+  create = async <T extends {}> (table: string, data: Partial<T>): Promise<T> => {
     const keys = Object.keys(data)
     if (!keys.length) return
     const header = await this.query(
       `INSERT INTO ?? (${joinKeys(keys)}) VALUES (${'?, '.repeat(keys.length - 1)}?)`,
       [table, ...formatValues(table, data, keys)],
     )
-    return { ...data, id: header.insertId } as T
+    return { ...data, id: header.insertId } as any
   }
 
   update = async (table: string, id: number | string, data: object) => {

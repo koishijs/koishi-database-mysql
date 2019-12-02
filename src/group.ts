@@ -1,6 +1,6 @@
 import { joinKeys, formatValues } from './database'
-import { isSubset } from 'koishi-utils'
-import { assignees as assigneeIds, injectMethods, GroupData, createGroup, groupFields } from 'koishi-core'
+import { isSubset, observe, complement, Observed } from 'koishi-utils'
+import { selfIds, injectMethods, GroupData, createGroup, groupFields } from 'koishi-core'
 
 type CachedGroupData = GroupData & { _timestamp: number }
 
@@ -34,8 +34,8 @@ injectMethods('mysql', {
     return group
   },
 
-  async getAllGroups (keys = groupFields, assignees = assigneeIds) {
-    let queryString = 'SELECT ' + joinKeys(keys) + ' FROM `groups`'
+  async getAllGroups (fields = groupFields, assignees = selfIds) {
+    let queryString = 'SELECT ' + joinKeys(fields) + ' FROM `groups`'
     if (assignees) queryString += ` WHERE \`assignee\` IN (${assignees.join(',')})`
     return this.query(queryString)
   },
@@ -48,6 +48,23 @@ injectMethods('mysql', {
     }
     Object.assign(groupCache[groupId], data)
     return result
+  },
+
+  async observeGroup (group, selfId = 0, fields = groupFields) {
+    if (typeof group === 'number') {
+      const data = await this.getGroup(group, selfId, fields)
+      return data && observe(data, diff => this.setGroup(group, diff), `group ${group}`)
+    } else {
+      const additionalFields = complement(fields, Object.keys(group))
+      const additionalData = additionalFields.length
+        ? await this.getGroup(group.id, selfId, complement(fields, Object.keys(group)))
+        : {} as Partial<GroupData>
+      if ('_diff' in group) {
+        return (group as Observed<GroupData>)._merge(additionalData)
+      } else {
+        return observe(Object.assign(group, additionalData), diff => this.setGroup(group.id, diff), `group ${group.id}`)
+      }
+    }
   },
 
   async getGroupCount () {
